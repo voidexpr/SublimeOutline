@@ -1,4 +1,4 @@
-## Outline for Sublime Text 3
+## Outline for Sublime Text 3 and 4
 
 ### Overview
 

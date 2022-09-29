@@ -12,6 +12,7 @@ if sublime.platform() == 'windows':
     import ctypes
 
 ST3 = int(sublime.version()) >= 3000
+ST4 = int(sublime.version()) >= 4000
 
 if ST3:
     MARK_OPTIONS = sublime.DRAW_NO_OUTLINE
@@ -532,3 +533,25 @@ class outlineBaseCommand:
         if folder.startswith(home):
             display = folder.replace(home, "~", 1)
         return display
+
+# avoid including symbols from another syntax than the file
+# for example in Markdown when using language specific code blocks:
+# ```python
+#   def foo(): return 10
+# ```
+# is included today but in Sublime4 it's possible to know the syntax of each
+# symbol and exclude this kind of embeded symbols which completely mess-up
+# Markdown outlines
+# TODO: use a config option
+def get_file_specific_syntax_symbols(view):
+    file_syntax = view.syntax().name
+    for s in view.symbol_regions():
+        if s.syntax == file_syntax:
+            yield (s.region, s.name)
+
+def my_get_symbols(view):
+    if ST4:
+        return list(get_file_specific_syntax_symbols(view))
+    else:
+        return view.get_symbols()
+
