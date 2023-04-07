@@ -61,7 +61,8 @@ def set_view(view_id, window, ignore_existing, single_pane):
         
         reset_sels = True
     else:
-        reset_sels = view.file_name() != view.settings().get('outline_path', '')
+        reset_sels = path != view.settings().get('outline_path', '')
+        # reset_sels = view.file_name() != view.settings().get('outline_path', '')
 
     return (view, reset_sels)
 
