@@ -62,7 +62,7 @@ class OutlineEventHandler(EventListener):
 		for group in range(window.num_groups()):
 			if group != sym_group and group != fb_group:
 				active_view = window.active_view_in_group(group)
-		if active_view != None:
+		if active_view is not None:
 			symkeys = None
 			# get the symbol list
 			symlist = my_get_symbols(active_view)
@@ -97,8 +97,8 @@ class OutlineEventHandler(EventListener):
 
 		sym_view, sym_group, fb_view, fb_group = get_sidebar_views_groups(view)
 
-		if sym_view != None:
-			if sym_view.settings().get('current_file') == view.file_name() and view.file_name() != None:
+		if sym_view is not None:
+			if sym_view.settings().get('current_file') == view.file_name() and view.file_name() is not None:
 				return
 			else:
 				sym_view.settings().set('current_file', view.file_name())
@@ -107,13 +107,32 @@ class OutlineEventHandler(EventListener):
 
 		refresh_sym_view(sym_view, symlist, view.file_name())
 
+	# def sync_outline_with_file_view(self, view):
+	# 	# sync the outline view with current file location
+	# 	if view.window() is None or not sym_view.settings().get('outline_sync'):
+	# 		return
+	# 	# get the current cursor location
+	# 	point = view.sel()[0].begin()
+	# 	# get the current symbol and its line in outline
+	# 	range_lows = [view.line(range.a).begin() for range, symbol in symlist]
+	# 	range_sorted = [0] + range_lows[1:len(range_lows)] + [view.size()]
+	# 	sym_line = binary_search(range_sorted, point) - 1
+
+	# 	if (sym_view is not None):
+	# 		sym_point_start = sym_view.text_point(sym_line, 0)
+	# 		# center symview at the point
+	# 		sym_view.show_at_center(sym_point_start)
+	# 		sym_view.sel().clear()
+	# 		sym_view.sel().add(sym_view.line(sym_point_start))
+	# 		view.window().focus_view(view)
+
 	def on_pre_save(self, view):
 		if u'𝌆' in view.name():
 			return
 		# this is not absolutely necessary, and prevents views that do not have a file reference from displaying 
 		# the symbol list
 		# but it solves a console error if the console is activiated, as console is also a view....
-		if view.file_name() == None:
+		if view.file_name() is None:
 			return
 
 		if not get_sidebar_status(view):
@@ -121,7 +140,7 @@ class OutlineEventHandler(EventListener):
 
 		sym_view, sym_group, fb_view, fb_group = get_sidebar_views_groups(view)
 
-		if sym_view != None:
+		if sym_view is not None:
 			# Note here is the only place that differs from on_activate_view
 			if sym_view.settings().get('current_file') != view.file_name():
 				sym_view.settings().set('current_file', view.file_name())
